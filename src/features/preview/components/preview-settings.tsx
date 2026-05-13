@@ -1,17 +1,22 @@
+"use client";
+
+import { z } from "zod";
+import { useState } from "react";
+import { useForm } from "@tanstack/react-form";
+import { SettingsIcon } from "lucide-react";
+
+import { useUpdateProjectSettings } from "@/features/projects/hooks/use-projects";
+
 import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SettingsIcon } from "lucide-react";
-import z from "zod";
-import { Doc, Id } from "../../../../convex/_generated/dataModel";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
-import { useState } from "react";
-import { useUpdateProjectSettings } from "@/features/projects/hooks/use-projects";
-import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
+import { Field, FieldLabel, FieldDescription } from "@/components/ui/field";
+
+import { Doc, Id } from "../../../../convex/_generated/dataModel";
 
 const formSchema = z.object({
   installCommand: z.string(),
@@ -22,8 +27,9 @@ interface PreviewSettingsPopoverProps {
   projectId: Id<"projects">;
   initialValues?: Doc<"projects">["settings"];
   onSave?: () => void;
-}
-const PreviewSettingsPopover = ({
+};
+
+export const PreviewSettingsPopover = ({
   projectId,
   initialValues,
   onSave,
@@ -49,26 +55,53 @@ const PreviewSettingsPopover = ({
       });
       setOpen(false);
       onSave?.();
-    },
+    }
   });
+
+  const handleOpenChange = (isOpen: boolean) => {
+    if (isOpen) {
+      form.reset({
+        installCommand: initialValues?.installCommand ?? "",
+        devCommand: initialValues?.devCommand ?? "",
+      });
+    }
+    setOpen(isOpen);
+  };
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
-        <Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="h-full rounded-none"
+          title="Preview settings"
+        >
           <SettingsIcon className="size-3" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent>
-        <form action="">
-          <div>
-            <div>
-              <h4>Preview Settings</h4>
-              <p>Configure how your project runs in the preview.</p>
+      <PopoverContent className="w-80" align="end">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+        >
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <h4 className="font-medium text-sm">
+                Preview Settings
+              </h4>
+              <p className="text-xs text-muted-foreground">
+                Configure how your project runs in the preview.
+              </p>
             </div>
             <form.Field name="installCommand">
               {(field) => (
                 <Field>
-                  <FieldLabel>Install Command</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    Install Command
+                  </FieldLabel>
                   <Input
                     id={field.name}
                     name={field.name}
@@ -121,5 +154,3 @@ const PreviewSettingsPopover = ({
     </Popover>
   );
 };
-
-export default PreviewSettingsPopover;
