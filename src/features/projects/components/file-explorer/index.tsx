@@ -13,7 +13,7 @@ export const FileExplorer = ({ projectId }: { projectId: Id<"projects"> }) => {
         >
           <ChevronRightIcon />
           <p>
-            <h1>Project</h1>
+            hi
           </p>
         </div>
       </ScrollArea>

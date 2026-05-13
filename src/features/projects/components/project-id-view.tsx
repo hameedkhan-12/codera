@@ -22,11 +22,18 @@ const Tab = ({
   onClick: () => void;
 }) => {
   return (
-    <div>
-      <span>{label}</span>
+    <div
+    onClick={onClick}
+      className={cn(
+        "flex items-center gap-2 h-full px-3 cursor-pointer text-muted-foreground border-r hover:bg-accent/30",
+        isActive && "bg-background text-foreground",
+      )}
+    >
+      <span className="text-sm">{label}</span>
     </div>
   );
 };
+
 
 export const ProjectIdView = ({ projectId }: { projectId: Id<"projects"> }) => {
   const [activeView, setActiveView] = useState<"editor" | "preview">("editor");
@@ -35,7 +42,7 @@ export const ProjectIdView = ({ projectId }: { projectId: Id<"projects"> }) => {
       <nav className="h-8.75 flex items-center bg-sidebar border-b">
         <Tab
           label="Code"
-          isActive={activeView === "preview"}
+          isActive={activeView === "editor"}
           onClick={() => setActiveView("editor")}
         />
         <Tab
@@ -43,8 +50,8 @@ export const ProjectIdView = ({ projectId }: { projectId: Id<"projects"> }) => {
           isActive={activeView === "preview"}
           onClick={() => setActiveView("preview")}
         />
-        <div>
-          <ExportPopover projectId={projectId}/>
+        <div className="flex-1 flex justify-end h-full">
+          <ExportPopover projectId={projectId} />
         </div>
       </nav>
       <div className="flex-1 relative">
@@ -67,10 +74,12 @@ export const ProjectIdView = ({ projectId }: { projectId: Id<"projects"> }) => {
             <Allotment.Pane>hi</Allotment.Pane>
           </Allotment>
         </div>
-         <div className={cn(
-          "absolute inset-0",
-          activeView === "preview" ? "visible" : "invisible"
-        )}>
+        <div
+          className={cn(
+            "absolute inset-0",
+            activeView === "preview" ? "visible" : "invisible",
+          )}
+        >
           <PreviewView projectId={projectId} />
         </div>
       </div>
