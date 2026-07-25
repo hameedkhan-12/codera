@@ -66,7 +66,7 @@ export const ProjectsView = () => {
             <div className="flex items-center gap-2 w-full group/logo">
               <img
                 src="/logo.svg"
-                alt="Polaris"
+                alt="Codera"
                 className="size-8 md:size-11.5"
               />
               <h1
