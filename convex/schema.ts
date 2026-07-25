@@ -26,7 +26,7 @@ export default defineSchema({
       v.object({
         installCommand: v.optional(v.string()),
         devCommand: v.optional(v.string()),
-      }),
+      })
     ),
   }).index("by_owner", ["ownerId"]),
 
@@ -58,8 +58,8 @@ export default defineSchema({
       v.union(
         v.literal("processing"),
         v.literal("completed"),
-        v.literal("cancelled"),
-      ),
+        v.literal("cancelled")
+      )
     ),
   })
     .index("by_conversation", ["conversationId"])

@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+
 import { verifyAuth } from "./auth";
 
 export const create = mutation({
@@ -7,7 +8,6 @@ export const create = mutation({
     projectId: v.id("projects"),
     title: v.string(),
   },
-
   handler: async (ctx, args) => {
     const identity = await verifyAuth(ctx);
 
@@ -37,6 +37,7 @@ export const getById = query({
   },
   handler: async (ctx, args) => {
     const identity = await verifyAuth(ctx);
+
     const conversation = await ctx.db.get("conversations", args.id);
 
     if (!conversation) {
@@ -63,6 +64,7 @@ export const getByProject = query({
   },
   handler: async (ctx, args) => {
     const identity = await verifyAuth(ctx);
+
     const project = await ctx.db.get("projects", args.projectId);
 
     if (!project) {
@@ -87,6 +89,7 @@ export const getMessages = query({
   },
   handler: async (ctx, args) => {
     const identity = await verifyAuth(ctx);
+
     const conversation = await ctx.db.get("conversations", args.conversationId);
 
     if (!conversation) {
@@ -106,7 +109,7 @@ export const getMessages = query({
     return await ctx.db
       .query("messages")
       .withIndex("by_conversation", (q) =>
-        q.eq("conversationId", args.conversationId),
+        q.eq("conversationId", args.conversationId)
       )
       .order("asc")
       .collect();
